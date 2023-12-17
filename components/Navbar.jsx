@@ -42,7 +42,7 @@ const MenuItems = ({ isMobile, active, setActive }) => {
 // ============================================================================================================================
 
 const ButtonGroup = ({ setActive, router }) => {
-  const hasConnected = false;
+  const hasConnected = true;
 
   return hasConnected ? (
     <Button
@@ -68,6 +68,7 @@ const Navbar = () => {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const [active, setActive] = useState('Explore NFTs');
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="flexBetween w-full fixed z-10 p-4 flex-row border-b dark:bg-nft-dark bg-white dark:border-nft-black-1 border-nft-gray-1">
@@ -99,13 +100,51 @@ const Navbar = () => {
             <div className="w-3 h-3 absolute bg-white rounded-full ball" />
           </label>
         </div>
+
+        <div className="md:hidden flex">
+          <MenuItems active={active} setActive={setActive} />
+          <div className="ml-4">
+            <ButtonGroup setActive={setActive} router={router} />
+          </div>
+        </div>
       </div>
 
-      <div className="md:hidden flex">
-        <MenuItems active={active} setActive={setActive} />
-        <div className="ml-4">
-          <ButtonGroup setActive={setActive} router={router} />
+      <div className="hidden md:flex ml-2">
+        {isOpen
+          ? (
+            <div className="ml-[5px]">
+              <Image
+                objectFit="contain"
+                width={20}
+                height={20}
+                alt="menu close"
+                onClick={() => setIsOpen(false)}
+                className={theme === 'light' && 'filter invert'}
+                src={images.cross}
+              />
+            </div>
+          ) : (
+            <Image
+              objectFit="contain"
+              width={25}
+              height={25}
+              alt="menu"
+              onClick={() => setIsOpen(true)}
+              className={theme === 'light' && 'filter invert'}
+              src={images.menu}
+            />
+          )}
+
+        {isOpen && (
+        <div className="fixed inset-0 top-65 dark:bg-nft-dark bg-white z-10 nav-h flex justify-between flex-col">
+          <div className="flex-1 p-4">
+            <MenuItems active={active} setActive={setActive} isMobile />
+          </div>
+          <div className="p-4 border-t dark:border-nft-black-1 border-nft-gray-1 flex justify-center">
+            <ButtonGroup setActive={setActive} router={router} />
+          </div>
         </div>
+        )}
       </div>
 
     </nav>

@@ -5,14 +5,14 @@ import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 
-import { NFTContext } from '../context/NFTContext';
+// import { NFTContext } from '../context/NFTContext';
 import { Button, Input, Loader } from '../components';
 import images from '../assets';
 
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
 
 const CreateItem = () => {
-  const { createSale, isLoadingNFT } = useContext(NFTContext);
+  // const { createSale, isLoadingNFT } = useContext(NFTContext);
   const [fileUrl, setFileUrl] = useState(null);
   const { theme } = useTheme();
 
@@ -60,20 +60,20 @@ const CreateItem = () => {
       const added = await client.add(data);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
-      await createSale(url, formInput.price);
+      // await createSale(url, formInput.price);
       router.push('/');
     } catch (error) {
       console.log('Error uploading file: ', error);
     }
   };
 
-  if (isLoadingNFT) {
-    return (
-      <div className="flexCenter" style={{ height: '51vh' }}>
-        <Loader />
-      </div>
-    );
-  }
+  // if (isLoadingNFT) {
+  //   return (
+  //     <div className="flexCenter" style={{ height: '51vh' }}>
+  //       <Loader />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="flex justify-center sm:px-4 p-12">
@@ -115,8 +115,39 @@ const CreateItem = () => {
             )}
           </div>
         </div>
-        </div>
-        </div>
-  )
 
-  export default createMarket;
+        <Input
+          inputType="input"
+          title="Name"
+          placeholder="Asset Name"
+          handleClick={(e) => updateFormInput({ ...formInput, name: e.target.value })}
+        />
+
+        <Input
+          inputType="textarea"
+          title="Description"
+          placeholder="Asset Description"
+          handleClick={(e) => updateFormInput({ ...formInput, description: e.target.value })}
+        />
+
+        <Input
+          inputType="number"
+          title="Price"
+          placeholder="Asset Price"
+          handleClick={(e) => updateFormInput({ ...formInput, price: e.target.value })}
+        />
+
+        <div className="mt-7 w-full flex justify-end">
+          <Button
+            value="Create Item"
+            btnType="primary"
+            classStyles="rounded-xl"
+            handleClick={createMarket}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CreateItem;
